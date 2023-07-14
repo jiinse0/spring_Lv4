@@ -1,6 +1,5 @@
 package com.sparta.spring_lv4.jwt;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.spring_lv4.dto.StatusResponseDto;
 import com.sparta.spring_lv4.security.UserDetailsServiceImpl;
 import io.jsonwebtoken.Claims;
