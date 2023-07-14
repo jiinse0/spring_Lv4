@@ -17,8 +17,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-// 들어온 jwt 검증 및 인가 (너 jwt에 문제 없어 너 허가!! 라는 느낌)
-public class JwtAuthorizationFilter extends OncePerRequestFilter { // OncePerRequestFilter : 요청 하나당 한번씩 수행하는 필터
+public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
     private final UserDetailsServiceImpl userDetailsService;
@@ -28,14 +27,13 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter { // OncePerReq
         this.userDetailsService = userDetailsService;
     }
 
-    // 로그인 토큰없이 시도 시 로그인 안내 메서드
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         String token = jwtUtil.resolveToken(request);
 
         if(token != null) {
-            if(!jwtUtil.validateToken(token)){ // 유효하지 않은 토큰인 경우 조건문 내부 코드 실행
+            if(!jwtUtil.validateToken(token)){
                 StatusResponseDto responseDto = new StatusResponseDto("토큰이 유효하지 않습니다.", HttpStatus.BAD_REQUEST.value());
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 response.setContentType("application/json; charset=UTF-8");
@@ -58,7 +56,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter { // OncePerReq
     }
 
     private Authentication createAuthentication(String username) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(username); // 사용자 정보 로드
-        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities()); // 인증객체 반환
+        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 }

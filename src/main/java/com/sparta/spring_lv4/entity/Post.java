@@ -31,9 +31,6 @@ public class Post extends Timestamped{
     @JoinColumn(name = "user_id")
     private User user;
 
-    // @OneToMany : 일대다
-    // mappedBy : 연관관계의 주인을 지정
-    //            "post"로 설정되어 있기 때문에 Post 엔티티가 연관관계의 주인
     @OneToMany(mappedBy = "post")
     private List<Comment> commentList = new ArrayList<>();
 

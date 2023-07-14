@@ -29,10 +29,6 @@ public class PostResponseDto {
         this.commentList.addAll(post.getCommentList()
                 .stream()
                 .map(CommentResponseDto::new)
-                // .sorted() : 스트림 요소를 정렬
-                // Comparator.comparing() : 정렬 기준 지정
-                //                          CommentResponseDto 객체의 createdAt 속성을 기준으로 정렬
-                // .reversed() : 정렬 순서를 반대로 변경 (내림차순)
                 .sorted(Comparator.comparing(CommentResponseDto::getCreatedAt).reversed())
                 .toList());
     }

@@ -21,7 +21,7 @@ public class User {
     private String password;
 
     @Column(nullable = false)
-    @Enumerated(value = EnumType.STRING) /*문자열로 매핑되어 데이터베이스에 저장*/
+    @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
     public User(String username, String password, UserRoleEnum role) {

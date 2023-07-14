@@ -20,7 +20,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
-@EnableWebSecurity // Spring Security 지원을 가능하게 함
+@EnableWebSecurity
 @RequiredArgsConstructor
 public class WebSecurityConfig {
 
@@ -51,18 +51,13 @@ public class WebSecurityConfig {
                 sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         );
 
-        // 중요
-        // authorizeHttpRequests : Http 요청에 대한 인증과 권한 부여 설정
-        http.authorizeHttpRequests((authorizeHttpRequests) -> // Http 요청에 대한 인증을 어떻게 할거냐
+        http.authorizeHttpRequests((authorizeHttpRequests) ->
                 authorizeHttpRequests
-                        // requestMatchers() : 특정 요청 매처에 대한 접근 권한 설정을 지정
-                        //                     괄호 안의 요청 정보가 조건에 맞는지 확인하고, 맞는다면 permitAll() 수행
-                        // permitAll() : requestMatchers() 에 해당하는 요청은 다 승인 해 주겠다. 따로 인증 수행 하지 않겠다.
-                        // StaticResources : resources 하위에 있는 application.properties
-                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll() // resources 접근 허용 설정
-                        .requestMatchers("/api/auth/**").permitAll() // '/api/auth/'로 시작하는 요청 모두 접근 허가 (회원가입, 로그인)
-                        .requestMatchers(HttpMethod.GET, "/api/post/**").permitAll() // 'GET /api/posts'로 시작하는 요청 모두 접근 허가 (게시글 조회)
-                        .anyRequest().authenticated() // 그 외 모든 요청 인증처리
+
+                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/post/**").permitAll()
+                        .anyRequest().authenticated()
         );
 
         http.addFilterBefore(jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
