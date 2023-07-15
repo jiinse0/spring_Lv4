@@ -2,11 +2,9 @@ package com.sparta.spring_lv4.controller;
 
 import com.sparta.spring_lv4.dto.PostRequestDto;
 import com.sparta.spring_lv4.dto.PostResponseDto;
-import com.sparta.spring_lv4.dto.StatusResponseDto;
 import com.sparta.spring_lv4.security.UserDetailsImpl;
 import com.sparta.spring_lv4.service.PostService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
