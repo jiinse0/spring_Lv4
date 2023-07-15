@@ -52,12 +52,14 @@ public class PostService {
         return new PostResponseDto(post);
     }
 
-    public void deletePost(User user, Long id) {
+    public PostResponseDto deletePost(User user, Long id) {
         Post post = findByPost(id);
 
         if (!(post.getUsername().equals(user.getUsername()) || user.getRole().equals(UserRoleEnum.ADMIN))) {
             throw new IllegalArgumentException("삭제할 권한이 없습니다.");
         }
+
+        return new PostResponseDto(post);
     }
 
     private Post findByPost(Long id) {
