@@ -37,7 +37,7 @@ public class UserController {
         try {
             userService.login(requestDto);
         } catch (IllegalArgumentException e) {
-            return new StatusResponseDto("회원을 찾을 수 없습니다.", HttpStatus.BAD_REQUEST.value());
+            return new StatusResponseDto(" 아이디 또는 비밀번호를 잘못 입력했습니다.", HttpStatus.BAD_REQUEST.value());
         }
 
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(requestDto.getUsername(), requestDto.getRole()));
