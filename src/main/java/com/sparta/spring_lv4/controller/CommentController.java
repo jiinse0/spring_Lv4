@@ -40,4 +40,30 @@ public class CommentController {
 
         return ResponseEntity.ok().body(new StatusResponseDto("댓글 삭제가 완료되었습니다.", HttpStatus.OK.value()));
     }
+
+    // 댓글 좋아요
+    @PostMapping("/comment/{commentId}/like")
+    public ResponseEntity<StatusResponseDto> commentLike(@PathVariable Long commentId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        try {
+            commentService.commentLike(commentId, userDetails.getUser());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(new StatusResponseDto(e.getMessage(), HttpStatus.BAD_REQUEST.value()));
+        }
+
+        return ResponseEntity.ok().body(new StatusResponseDto("좋아요 되었습니다.", HttpStatus.OK.value()));
+    }
+
+    // 댓글 좋아요 취소
+    @DeleteMapping("/comment/{commentId}/like")
+    public ResponseEntity<StatusResponseDto> cancelCommentLike(@PathVariable Long commentId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        try {
+            commentService.cancelCommentLike(commentId, userDetails.getUser());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(new StatusResponseDto(e.getMessage(), HttpStatus.BAD_REQUEST.value()));
+        }
+
+        return ResponseEntity.ok().body(new StatusResponseDto("좋아요 취소 되었습니다.", HttpStatus.OK.value()));
+    }
 }
