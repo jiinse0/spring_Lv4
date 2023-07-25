@@ -14,15 +14,18 @@ public class PostResponseDto {
     private String username;
     private String title;
     private String content;
+    private Integer postLikeCnt;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
     private List<CommentResponseDto> commentList = new ArrayList<>();
+//    private List<PostLike>
 
     public PostResponseDto(Post post) {
         this.id = post.getId();
         this.username = post.getUser().getUsername();
         this.title = post.getTitle();
         this.content = post.getContent();
+        this.postLikeCnt = post.getPostLikeList().size();
         this.createdAt = post.getCreateAt();
         this.modifiedAt = post.getModifiedAt();
 
