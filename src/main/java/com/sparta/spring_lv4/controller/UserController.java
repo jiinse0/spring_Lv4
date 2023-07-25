@@ -26,7 +26,7 @@ public class UserController {
 
         try {
             userService.signup(requestDto);
-            return ResponseEntity.status(201).body(new StatusResponseDto("로그인이 완료되었습니다.", HttpStatus.CREATED.value()));
+            return ResponseEntity.status(201).body(new StatusResponseDto("회원가입이 완료되었습니다.", HttpStatus.CREATED.value()));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(new StatusResponseDto("이미 존재하는 회원입니다.", HttpStatus.BAD_REQUEST.value()));
         }
