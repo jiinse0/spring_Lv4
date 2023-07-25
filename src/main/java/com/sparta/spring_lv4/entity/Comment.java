@@ -4,10 +4,15 @@ import com.sparta.spring_lv4.dto.CommentRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
 @Getter
+@Setter
 @Table(name = "comment")
 public class Comment extends Timestamped{
     @Id
@@ -28,6 +33,9 @@ public class Comment extends Timestamped{
     @ManyToOne
     @JoinColumn(name = "post_id")
     private Post post;
+
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE)
+    private List<CommentLike> commentLikeList = new ArrayList<>();
 
     public Comment(CommentRequestDto requestDto, User user, Post post) {
         this.comment = requestDto.getComment();
