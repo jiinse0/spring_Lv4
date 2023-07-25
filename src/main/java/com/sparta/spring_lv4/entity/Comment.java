@@ -4,7 +4,6 @@ import com.sparta.spring_lv4.dto.CommentRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +11,6 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @Getter
-@Setter
 @Table(name = "comment")
 public class Comment extends Timestamped{
     @Id
