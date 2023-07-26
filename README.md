@@ -15,6 +15,8 @@
 3. 예외처리 (구현중)
     - 아래 예외처리를 AOP 를 활용하여 구현하기
 
+<br>
+
 ## 사용한 Tool
 <div style="display: flex; justify-content: center;">
   <img src="https://img.shields.io/badge/Java-007396?&style=flat&logo=Java&logoColor=white" style="margin-right: 10px;">
@@ -30,6 +32,7 @@
   <img src="https://img.shields.io/badge/Postman-FF6C37?style=flat&logo=postman&logoColor=white" style="margin-right: 10px;">
 </div>
 
+<br>
 
-<h3>diagrams</h3>
+<h2>diagrams</h2>
 <img width="531" alt="image" src="https://github.com/jiinse0/spring_Lv4/assets/130745679/aa510c40-ad3f-4ff6-ac74-8a5601b6b535">
