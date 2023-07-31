@@ -72,11 +72,6 @@ public class CommentService {
         }
     }
 
-//    private Post findByPost(Long postId) {
-//        return postRepository.findById(postId).orElseThrow(
-//                () -> new IllegalArgumentException("게시글이 존재하지 않습니다.")
-//        );
-//    }
     public Comment findComment(Long commentId) {
         return commentRepository.findById(commentId).orElseThrow(
                 () -> new IllegalArgumentException("댓글이 존재하지 않습니다.")
