@@ -17,10 +17,10 @@ import java.util.Optional;
 public class CommentService {
     private final CommentRepository commentRepository;
     private final CommentLikeRepository commentLikeRepository;
-    private final PostRepository postRepository;
+    private final PostService postService;
 
     public CommentResponseDto createComment(Long postId, CommentRequestDto requestDto, User user) {
-        Post post = findByPost(postId);
+        Post post = postService.findPost(postId);
         Comment comment = new Comment(requestDto, user, post);
 
         commentRepository.save(comment);
@@ -29,25 +29,12 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentResponseDto updateComment(Long commentId, CommentRequestDto requestDto, User user) {
-        Comment comment = findByComment(commentId);
-
-        if (!(user.getRole().equals(UserRoleEnum.ADMIN) || comment.getUsername().equals(user.getUsername()))) {
-            throw new IllegalArgumentException("수정할 권한이 없습니다.");
-        }
-
+    public CommentResponseDto updateComment(Comment comment, CommentRequestDto requestDto, User user) {
         comment.updateComment(requestDto);
-
         return new CommentResponseDto(comment);
     }
 
-    public void deleteComment(Long commentId, User user) {
-        Comment comment = findByComment(commentId);
-
-        if (!(user.getRole().equals(UserRoleEnum.ADMIN) || comment.getUsername().equals(user.getUsername()))) {
-            throw new IllegalArgumentException("삭제할 권한이 없습니다.");
-        }
-
+    public void deleteComment(Comment comment, User user) {
         commentRepository.delete(comment);
     }
 
@@ -55,7 +42,7 @@ public class CommentService {
     @Transactional
     public void commentLike(Long commentId, User user) {
 
-        Comment comment = findByComment(commentId);
+        Comment comment = findComment(commentId);
 
         if (user.getUsername().equals(comment.getUsername())) {
 
@@ -74,7 +61,7 @@ public class CommentService {
     // 댓글 좋아요 취소
     @Transactional
     public void cancelCommentLike(Long commentId, User user) {
-        Comment comment = findByComment(commentId);
+        Comment comment = findComment(commentId);
 
         Optional<CommentLike> commentLike = commentLikeRepository.findByUserAndComment(user, comment);
 
@@ -85,12 +72,12 @@ public class CommentService {
         }
     }
 
-    private Post findByPost(Long postId) {
-        return postRepository.findById(postId).orElseThrow(
-                () -> new IllegalArgumentException("게시글이 존재하지 않습니다.")
-        );
-    }
-    private Comment findByComment(Long commentId) {
+//    private Post findByPost(Long postId) {
+//        return postRepository.findById(postId).orElseThrow(
+//                () -> new IllegalArgumentException("게시글이 존재하지 않습니다.")
+//        );
+//    }
+    public Comment findComment(Long commentId) {
         return commentRepository.findById(commentId).orElseThrow(
                 () -> new IllegalArgumentException("댓글이 존재하지 않습니다.")
         );

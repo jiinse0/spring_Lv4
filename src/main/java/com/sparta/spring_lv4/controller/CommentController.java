@@ -3,6 +3,7 @@ package com.sparta.spring_lv4.controller;
 import com.sparta.spring_lv4.dto.CommentRequestDto;
 import com.sparta.spring_lv4.dto.CommentResponseDto;
 import com.sparta.spring_lv4.dto.StatusResponseDto;
+import com.sparta.spring_lv4.entity.Comment;
 import com.sparta.spring_lv4.security.UserDetailsImpl;
 import com.sparta.spring_lv4.service.CommentService;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,8 @@ public class CommentController {
     @PutMapping("/comment/{commentId}")
     public ResponseEntity<CommentResponseDto> updateComment(@PathVariable Long commentId, @RequestBody CommentRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        CommentResponseDto updateComment = commentService.updateComment(commentId, requestDto, userDetails.getUser());
+        Comment comment = commentService.findComment(commentId);
+        CommentResponseDto updateComment = commentService.updateComment(comment, requestDto, userDetails.getUser());
 
         return ResponseEntity.ok().body(updateComment);
     }
@@ -36,7 +38,8 @@ public class CommentController {
     @DeleteMapping("/comment/{commentId}")
     public ResponseEntity<StatusResponseDto> deleteComment(@PathVariable Long commentId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        commentService.deleteComment(commentId, userDetails.getUser());
+        Comment comment = commentService.findComment(commentId);
+        commentService.deleteComment(comment, userDetails.getUser());
 
         return ResponseEntity.ok().body(new StatusResponseDto("댓글 삭제가 완료되었습니다.", HttpStatus.OK.value()));
     }

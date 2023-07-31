@@ -3,6 +3,7 @@ package com.sparta.spring_lv4.controller;
 import com.sparta.spring_lv4.dto.PostRequestDto;
 import com.sparta.spring_lv4.dto.PostResponseDto;
 import com.sparta.spring_lv4.dto.StatusResponseDto;
+import com.sparta.spring_lv4.entity.Post;
 import com.sparta.spring_lv4.security.UserDetailsImpl;
 import com.sparta.spring_lv4.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -45,7 +46,8 @@ public class PostController {
     @PutMapping("/post/{id}")
     public ResponseEntity<PostResponseDto> updatePost(@PathVariable Long id, @RequestBody PostRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        PostResponseDto updatePost = postService.updatePost(id, requestDto, userDetails.getUser());
+        Post post = postService.findPost(id);
+        PostResponseDto updatePost = postService.updatePost(post, requestDto, userDetails.getUser());
         return ResponseEntity.ok().body(updatePost);
     }
 
@@ -53,7 +55,8 @@ public class PostController {
     public ResponseEntity<StatusResponseDto> deletePost(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long id) {
 
         try {
-            postService.deletePost(userDetails.getUser(), id);
+            Post post = postService.findPost(id);
+            postService.deletePost(userDetails.getUser(), post);
             return ResponseEntity.ok().body(new StatusResponseDto("삭제 되었습니다.", HttpStatus.OK.value()));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(new StatusResponseDto("게시글이 존재하지 않거나 삭제할 권한이 없습니다.", HttpStatus.BAD_REQUEST.value()));
