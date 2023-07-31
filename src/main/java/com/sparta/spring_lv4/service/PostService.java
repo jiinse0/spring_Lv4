@@ -5,7 +5,6 @@ import com.sparta.spring_lv4.dto.PostResponseDto;
 import com.sparta.spring_lv4.entity.Post;
 import com.sparta.spring_lv4.entity.PostLike;
 import com.sparta.spring_lv4.entity.User;
-import com.sparta.spring_lv4.entity.UserRoleEnum;
 import com.sparta.spring_lv4.repository.PostLikeRepository;
 import com.sparta.spring_lv4.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -38,38 +37,26 @@ public class PostService {
     }
 
     public PostResponseDto getOnePost(Long id) {
-        Post post = findByPost(id);
+        Post post = findPost(id);
 
         return new PostResponseDto(post);
     }
 
     @Transactional
-    public PostResponseDto updatePost(Long id, PostRequestDto requestDto, User user) {
-        Post post = findByPost(id);
-
-        if (!(post.getUsername().equals(user.getUsername()) || user.getRole().equals(UserRoleEnum.ADMIN))) {
-            throw new IllegalArgumentException("수정할 권한이 없습니다.");
-        }
+    public PostResponseDto updatePost(Post post, PostRequestDto requestDto, User user) {
 
         post.update(requestDto);
-
         return new PostResponseDto(post);
     }
 
-    public void deletePost(User user, Long id) {
-        Post post = findByPost(id);
-
-        if (!(post.getUsername().equals(user.getUsername()) || user.getRole().equals(UserRoleEnum.ADMIN))) {
-            throw new IllegalArgumentException("삭제할 권한이 없습니다.");
-        }
-
+    public void deletePost(User user, Post post) {
         postRepository.delete(post);
     }
 
     // 게시글 좋아요
     @Transactional
     public void postLike(Long postId, User user) {
-        Post post = findByPost(postId);
+        Post post = findPost(postId);
 
         if (user.getUsername().equals(post.getUsername())) {
 
@@ -88,7 +75,7 @@ public class PostService {
 
     @Transactional
     public void cancelPostLike(Long postId, User user) {
-        Post post = findByPost(postId);
+        Post post = findPost(postId);
 
         Optional<PostLike> postLike = postLikeRepository.findByUserAndPost(user, post);
 
@@ -100,7 +87,7 @@ public class PostService {
         }
     }
 
-    private Post findByPost(Long id) {
+    public Post findPost(Long id) {
         return postRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("등록된 게시글이 없습니다.")
         );
