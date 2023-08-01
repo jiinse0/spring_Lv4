@@ -14,83 +14,56 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-@Service
-@RequiredArgsConstructor
-public class PostService {
 
-    private final PostRepository postRepository;
-    private final PostLikeRepository postLikeRepository;
+public interface PostService {
+    /**
+     * 게시글 생성
+     * @param requestDto
+     * @param user
+     * @return
+     */
+    PostResponseDto createPost(PostRequestDto requestDto, User user);
 
-    public PostResponseDto createPost(PostRequestDto requestDto, User user) {
-        Post post = new Post(requestDto, user);
+    /**
+     * 게시글 조회
+     * @return
+     */
+    List<PostResponseDto> getPost();
 
-        postRepository.save(post);
+    /**
+     * 선택 게시글 조회
+     * @param id
+     * @return
+     */
+    PostResponseDto getOnePost(Long id);
 
-        return new PostResponseDto(post);
-    }
+    /**
+     * 게시글 수정
+     * @param post
+     * @param requestDto
+     * @param user
+     * @return
+     */
+    PostResponseDto updatePost(Post post, PostRequestDto requestDto, User user);
 
-    public List<PostResponseDto> getPost() {
-        return postRepository.findAllByOrderByCreateAtDesc()
-                .stream()
-                .map(PostResponseDto::new)
-                .toList();
-    }
+    /**
+     * 게시글 삭제
+     * @param user
+     * @param post
+     */
+    void deletePost(User user, Post post);
 
-    public PostResponseDto getOnePost(Long id) {
-        Post post = findPost(id);
+    /**
+     * 게시글 좋아요
+     * @param postId
+     * @param user
+     */
+    void postLike(Long postId, User user);
 
-        return new PostResponseDto(post);
-    }
-
-    @Transactional
-    public PostResponseDto updatePost(Post post, PostRequestDto requestDto, User user) {
-
-        post.update(requestDto);
-        return new PostResponseDto(post);
-    }
-
-    public void deletePost(User user, Post post) {
-        postRepository.delete(post);
-    }
-
-    // 게시글 좋아요
-    @Transactional
-    public void postLike(Long postId, User user) {
-        Post post = findPost(postId);
-
-        if (user.getUsername().equals(post.getUsername())) {
-
-            throw new IllegalArgumentException("자신의 게시글에는 좋아요를 누를 수 없습니다.");
-
-        } else {
-
-            if (postLikeRepository.findByUserAndPost(user, post).isPresent()) {
-                throw new IllegalArgumentException("이미 좋아요한 게시글 입니다.");
-            } else {
-                PostLike postLike = new PostLike(user, post);
-                postLikeRepository.save(postLike);
-            }
-        }
-    }
-
-    @Transactional
-    public void cancelPostLike(Long postId, User user) {
-        Post post = findPost(postId);
-
-        Optional<PostLike> postLike = postLikeRepository.findByUserAndPost(user, post);
-
-        if (postLike.isEmpty()) {
-            throw new IllegalArgumentException("좋아요 취소 되어있는 게시물 입니다.");
-        } else {
-            postLikeRepository.delete(postLike.get());
-
-        }
-    }
-
-    public Post findPost(Long id) {
-        return postRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("등록된 게시글이 없습니다.")
-        );
-    }
-
+    /**
+     * 게시글 좋아요 취소
+     * @param postId
+     * @param user
+     */
+    void cancelPostLike(Long postId, User user);
 }
