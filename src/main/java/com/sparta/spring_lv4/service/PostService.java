@@ -16,6 +16,7 @@ import java.util.Optional;
 
 
 public interface PostService {
+
     /**
      * 게시글 생성
      * @param requestDto
@@ -66,4 +67,5 @@ public interface PostService {
      * @param user
      */
     void cancelPostLike(Long postId, User user);
+
 }

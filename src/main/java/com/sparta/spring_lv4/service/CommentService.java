@@ -46,4 +46,5 @@ public interface CommentService {
      * @param user
      */
     void cancelCommentLike(Long commentId, User user);
+
 }
