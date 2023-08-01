@@ -6,7 +6,9 @@ import com.sparta.spring_lv4.dto.StatusResponseDto;
 import com.sparta.spring_lv4.entity.Comment;
 import com.sparta.spring_lv4.security.UserDetailsImpl;
 import com.sparta.spring_lv4.service.CommentService;
+import com.sparta.spring_lv4.service.CommentServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,13 +18,13 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class CommentController {
-    private final CommentService commentService;
+    private final CommentServiceImpl commentService;
+    private final MessageSource messageSource;
 
     @PostMapping("/{postId}/comment")
     public ResponseEntity<CommentResponseDto> createComment(@PathVariable Long postId, @RequestBody CommentRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
         CommentResponseDto createComment = commentService.createComment(postId, requestDto, userDetails.getUser());
-
         return ResponseEntity.ok().body(createComment);
     }
 
@@ -48,12 +50,7 @@ public class CommentController {
     @PostMapping("/comment/{commentId}/like")
     public ResponseEntity<StatusResponseDto> commentLike(@PathVariable Long commentId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        try {
-            commentService.commentLike(commentId, userDetails.getUser());
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(new StatusResponseDto(e.getMessage(), HttpStatus.BAD_REQUEST.value()));
-        }
-
+        commentService.commentLike(commentId, userDetails.getUser());
         return ResponseEntity.ok().body(new StatusResponseDto("좋아요 되었습니다.", HttpStatus.OK.value()));
     }
 
@@ -61,12 +58,7 @@ public class CommentController {
     @DeleteMapping("/comment/{commentId}/like")
     public ResponseEntity<StatusResponseDto> cancelCommentLike(@PathVariable Long commentId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        try {
-            commentService.cancelCommentLike(commentId, userDetails.getUser());
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(new StatusResponseDto(e.getMessage(), HttpStatus.BAD_REQUEST.value()));
-        }
-
+        commentService.cancelCommentLike(commentId, userDetails.getUser());
         return ResponseEntity.ok().body(new StatusResponseDto("좋아요 취소 되었습니다.", HttpStatus.OK.value()));
     }
 }
