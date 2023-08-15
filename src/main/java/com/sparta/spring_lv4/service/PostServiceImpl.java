@@ -45,6 +45,15 @@ public class PostServiceImpl implements PostService{
         return new PostResponseDto(post);
     }
 
+    /* QueryDSL 사용하여 게시글 제목 중 keyword 검색 */
+    @Override
+    public List<PostResponseDto> searchPost(String keyword) {
+        return postRepository.getSearchPostList(keyword)
+                .stream()
+                .map(PostResponseDto::new)
+                .toList();
+    }
+
     @Transactional
     public PostResponseDto updatePost(Post post, PostRequestDto requestDto, User user) {
         findPost(post.getId());
