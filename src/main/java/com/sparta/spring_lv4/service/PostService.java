@@ -3,16 +3,9 @@ package com.sparta.spring_lv4.service;
 import com.sparta.spring_lv4.dto.PostRequestDto;
 import com.sparta.spring_lv4.dto.PostResponseDto;
 import com.sparta.spring_lv4.entity.Post;
-import com.sparta.spring_lv4.entity.PostLike;
 import com.sparta.spring_lv4.entity.User;
-import com.sparta.spring_lv4.repository.PostLikeRepository;
-import com.sparta.spring_lv4.repository.PostRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 
 public interface PostService {
@@ -37,6 +30,13 @@ public interface PostService {
      * @return
      */
     PostResponseDto getOnePost(Long id);
+
+    /**
+     * 게시글 keyword 검색 (QueryDSL)
+     * @param keyword
+     * @return
+     */
+    List<PostResponseDto> searchPost(String keyword);
 
     /**
      * 게시글 수정
