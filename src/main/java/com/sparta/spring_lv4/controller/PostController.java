@@ -6,6 +6,7 @@ import com.sparta.spring_lv4.dto.StatusResponseDto;
 import com.sparta.spring_lv4.entity.Post;
 import com.sparta.spring_lv4.security.UserDetailsImpl;
 import com.sparta.spring_lv4.service.PostServiceImpl;
+import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -59,7 +60,7 @@ public class PostController {
         return ResponseEntity.ok().body(new StatusResponseDto("삭제 되었습니다.", HttpStatus.OK.value()));
     }
 
-    // 게시글 좋아요
+    /*게시글 좋아요*/
     @PostMapping("/post/{postId}/like")
     public ResponseEntity<StatusResponseDto> postLike(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
@@ -67,11 +68,17 @@ public class PostController {
         return ResponseEntity.ok().body(new StatusResponseDto("좋아요 되었습니다.", HttpStatus.OK.value()));
     }
 
-    // 게시글 좋아요 취소
+    /*게시글 좋아요 취소*/
     @DeleteMapping("/post/{postId}/like")
     public ResponseEntity<StatusResponseDto> cancelPostLike(@PathVariable Long postId,  @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
         postService.cancelPostLike(postId, userDetails.getUser());
         return ResponseEntity.ok().body(new StatusResponseDto("좋아요 취소 되었습니다.", HttpStatus.OK.value()));
+    }
+
+    /* QueryDSL 사용하여 게시글 제목 중 keyword 검색 */
+    @GetMapping("/post/search")
+    public List<PostResponseDto> searchPost(@Nullable @RequestParam("keyword") String keyword) {
+        return postService.searchPost(keyword);
     }
 }
